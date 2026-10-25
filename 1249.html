@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="LC 1249 的可操作 Dry Run：逐步查看 Two Pass + Balance Counter，支持自定义输入与 Python 代码同步高亮。">
+<title>LC 1249 · Interactive Dry Run</title>
+<style>
+:root{--bg:#fff;--card:#fff;--soft:#f7f8fa;--ink:#20242c;--muted:#747a86;--line:#e5e7eb;--blue:#375be8;--blue-bg:#eef2ff;--green:#198057;--green-bg:#ecf8f1;--red:#bd4550;--red-bg:#fff0f1;--amber:#946b18;--amber-bg:#fff8e7;--shadow:0 6px 28px #20242c06;--radius:20px;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:15px;line-height:1.6}button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:default;opacity:.38}button,input,select{border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}button{padding:9px 14px;font-weight:550;transition:background .15s,border-color .15s}button:hover:not(:disabled){background:var(--soft);border-color:#b8c4ef}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #7795ff;outline-offset:3px}button.primary{background:var(--blue);color:#fff;border-color:var(--blue)}button.primary:hover:not(:disabled){background:#2c4dc9}.wrap{max-width:1160px;margin:0 auto;padding:32px 28px 24px}.eyebrow{font-size:11px;letter-spacing:.15em;font-weight:700;color:var(--muted);text-transform:uppercase}.top{display:flex;align-items:center;justify-content:space-between;gap:16px}.badge{border:1px solid var(--line);padding:5px 9px;border-radius:8px;font:12px var(--mono);color:var(--muted)}h1{margin:7px 0 5px;font-size:clamp(24px,3vw,34px);line-height:1.3;letter-spacing:-.7px}h1 small{font-size:.65em;color:var(--muted);font-weight:500}.intro{color:var(--muted);margin:0 0 20px}.entry{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:var(--soft);padding:14px 16px;border-radius:14px}.entry label{font-family:var(--mono);font-weight:600}.entry input{min-width:120px;flex:1;padding:9px 12px;font-family:var(--mono)}.entry select{padding:9px 8px;max-width:210px}.form-note{color:var(--muted);font-size:12px;margin:7px 1px 16px}.error{color:var(--red);font-size:13px;margin:4px 0;min-height:0}.phase-tabs{display:flex;gap:7px;margin-bottom:15px;flex-wrap:wrap}.phase-tabs button{flex:1;min-width:140px;border:1px solid transparent;color:var(--muted);background:var(--soft);font-size:13px}.phase-tabs button[aria-selected=true]{background:var(--blue-bg);color:var(--blue);border-color:#d8e0ff}.panel{border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.panel h2{font-size:21px;letter-spacing:-.4px;line-height:1.4;margin:0}.stage-sub{font-size:13px;color:var(--muted);margin:5px 0 0}.step{font-family:var(--mono);font-size:13px;color:var(--muted);white-space:nowrap;padding-top:3px}.rail-title{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin-top:22px}.rail{display:flex;gap:7px;overflow-x:auto;padding:10px 2px 14px;scrollbar-width:thin}.cell{flex:1;min-width:40px;max-width:95px;text-align:center}.cell .idx{font:12px var(--mono);color:var(--muted);margin-bottom:6px}.tile{height:60px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:11px;font:600 26px var(--mono);background:var(--card);position:relative}.cell.done .tile{background:var(--soft);color:var(--muted)}.cell.removed .tile{background:var(--red-bg);border-color:transparent;color:var(--red);text-decoration:line-through;text-decoration-thickness:2px}.cell.active .tile{background:var(--blue-bg);color:var(--blue);border:2px solid #93aaff}.cell.active.removed .tile{border-color:#ef9aa4;background:var(--red-bg);color:var(--red)}.cell.active .idx{color:var(--blue);font-weight:700}.cell .mark{font-size:10px;color:var(--muted);height:18px;margin-top:3px}.cell.active .mark{color:var(--blue)}.cell.removed .mark{color:var(--red)}.rail-empty{padding:20px 0;color:var(--muted);font-family:var(--mono)}.legend{display:flex;gap:16px;font-size:11px;color:var(--muted);flex-wrap:wrap}.legend span:before{content:"";display:inline-block;width:8px;height:8px;border-radius:3px;background:var(--blue-bg);border:1px solid #93aaff;margin-right:5px}.legend .removed:before{background:var(--red-bg);border-color:#ef9aa4}.legend .done:before{background:var(--soft);border-color:var(--line)}.variables{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(140px,1fr);gap:14px;margin:22px 0 16px}.variables.three{grid-template-columns:minmax(0,1.15fr) minmax(130px,.8fr) minmax(0,1.15fr)}.variable{padding:14px 16px;border:1px solid var(--line);border-radius:13px;min-width:0;background:var(--card)}.var-name{font:13px var(--mono);color:var(--muted);margin-bottom:6px}.var-value{font:600 25px/1.5 var(--mono);min-height:38px;overflow-wrap:anywhere}.var-list{font:11px/1.5 var(--mono);color:var(--muted);margin-top:4px;overflow-wrap:anywhere}.counter .var-value{color:var(--blue)}.counter .before{color:var(--muted);font-size:18px;font-weight:400}.var-help{font-size:12px;color:var(--muted);margin-top:3px}.explain{min-height:96px;padding:15px 17px;background:var(--blue-bg);border-radius:12px}.explain.drop{background:var(--red-bg)}.explain.finish{background:var(--green-bg)}.explain-head{font-size:15px;font-weight:650;margin-bottom:4px}.explain-body{font-size:14px;color:var(--ink)}.code-inline{font-family:var(--mono)}.controls{display:flex;gap:8px;align-items:center;margin-top:20px;flex-wrap:wrap}.controls .spacer{flex:1}.controls button{min-width:38px}.controls select{padding:9px 6px;font-size:12px}.timeline{width:100%;accent-color:var(--blue);height:5px;margin:21px 0 8px;display:block;cursor:pointer}.timeline-caption{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}.result-banner{margin-top:15px;padding:15px 18px;border:1px solid #c7e5d4;background:var(--green-bg);border-radius:12px}.result-banner h3{font-size:13px;margin:0 0 6px;color:var(--green)}.result-string{font:600 26px var(--mono);overflow-wrap:anywhere}.result-meta{font-size:12px;color:var(--muted);margin-top:7px}.detail{border:1px solid var(--line);border-radius:14px;margin-top:16px;overflow:hidden}.detail summary{padding:12px 16px;cursor:pointer;font-size:13px;font-weight:600}.detail .content{border-top:1px solid var(--line);padding:14px 16px;font-size:13px}.code-content{padding:10px 0!important;overflow-x:auto;background:var(--soft)}.code-line{font:12px/1.9 var(--mono);white-space:pre;display:flex;min-width:650px;padding:0 16px;border-left:3px solid transparent}.line-no{color:var(--muted);min-width:29px;display:inline-block;user-select:none}.code-line.active{background:var(--blue-bg);border-left-color:var(--blue)}.detail p{margin:6px 0}.footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:18px}.footer a{color:inherit}.mode-button{font-size:12px;padding:5px 9px;margin-left:8px}.embed .page-head{display:none}.embed .wrap{padding:14px;max-width:none}.embed .panel{padding:19px}.embed .intro{display:none}[hidden]{display:none!important}#copyStatus{font-size:12px;color:var(--muted)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#191a1d;--card:#202226;--soft:#272a30;--ink:#e9eaed;--muted:#a1a7b2;--line:#373b43;--blue:#92aaff;--blue-bg:#293455;--green:#8bd5b0;--green-bg:#203b31;--red:#ffa1ab;--red-bg:#442c33;--amber:#e3c681;--amber-bg:#3b3528;--shadow:none}button.primary{color:var(--bg)}}
+:root[data-theme=dark]{--bg:#191a1d;--card:#202226;--soft:#272a30;--ink:#e9eaed;--muted:#a1a7b2;--line:#373b43;--blue:#92aaff;--blue-bg:#293455;--green:#8bd5b0;--green-bg:#203b31;--red:#ffa1ab;--red-bg:#442c33;--amber:#e3c681;--amber-bg:#3b3528;--shadow:none}
+@media(max-width:650px){.wrap{padding:18px 14px}.panel,.embed .panel{padding:17px 13px}.panel h2{font-size:18px}.entry{padding:11px}.entry select{width:100%;max-width:none}.variables,.variables.three{grid-template-columns:1fr 1fr;gap:9px}.variable{padding:11px}.variables.three #varFiltered{grid-column:1/-1}.var-value{font-size:21px}.tile{height:49px;font-size:22px}.cell{min-width:35px}.rail{gap:5px}.step{font-size:11px}.controls button{padding:8px 10px;font-size:13px}.controls .spacer{display:none}.controls{justify-content:flex-end}.footer{font-size:10px}.explain{min-height:115px}.badge{display:none}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="page-head">
+<div class="top"><div class="eyebrow">LeetCode · Interactive Dry Run</div><span class="badge">Two Pass + Balance Counter</span></div>
+<h1>1249 <small>Minimum Remove to Make Valid Parentheses</small></h1>
+<p class="intro">不是只看答案，而是逐步观察：这个字符为什么保留，为什么跳过。</p>
+</header>
+<form id="inputForm" class="entry">
+<label for="source">s =</label><input id="source" name="s" type="text" value="a)b(c)d((" maxlength="120" autocomplete="off" spellcheck="false" aria-describedby="inputNote error">
+<button class="primary" type="submit">运行示例</button>
+<select id="examples" aria-label="选择示例"><option value="">选择一个例子</option><option value="a)b(c)d((">a)b(c)d(( · 两种多余括号</option><option value="a(b)c(">a(b)c( · 只多一个 (</option><option value="(()">(() · 嵌套与重新匹配</option><option value="()(">()( · 为什么从右侧删除</option><option value="lee(t(c)o)de)">lee(t(c)o)de) · 多余的 )</option><option value=")(">)( · 顺序不合法</option><option value="abc">abc · 只有字母</option><option value="__empty__">空字符串 · Edge Case</option></select>
+</form>
+<p id="inputNote" class="form-note">只输入括号和小写字母，无需加引号。空字符串可用。演示上限 120 个字符。</p><p id="error" class="error" role="alert"></p>
+<nav class="phase-tabs" role="tablist" aria-label="选择演示阶段"><button type="button" id="tab1" role="tab" aria-selected="true">01 &nbsp; Pass 1 · 左 → 右</button><button type="button" id="tab2" role="tab" aria-selected="false">02 &nbsp; Pass 2 · 右 → 左</button><button type="button" id="tab3" role="tab" aria-selected="false">03 &nbsp; Reverse + Join</button></nav>
+<section class="panel" aria-label="Dry Run 演示">
+<div class="panel-head"><div><h2 id="phaseTitle"></h2><p id="stageSub" class="stage-sub"></p></div><div id="stepLabel" class="step"></div></div>
+<div class="rail-title"><span id="railName"></span><span id="direction"></span></div>
+<div id="rail" class="rail" aria-label="逐字符处理状态"></div>
+<div class="legend"><span>当前处理</span><span class="removed">已跳过</span><span class="done">已保留</span></div>
+<div id="variables" class="variables">
+<div class="variable"><div class="var-name">res</div><div id="resText" class="var-value"></div><div id="resList" class="var-list"></div><div class="var-help">Pass 1 保留的字符，顺序不变</div></div>
+<div class="variable counter"><div class="var-name">cnt</div><div id="cntText" class="var-value"></div><div id="cntHelp" class="var-help"></div></div>
+<div id="varFiltered" class="variable" hidden><div class="var-name">filtered</div><div id="filteredText" class="var-value"></div><div id="filteredList" class="var-list"></div><div class="var-help">按反向扫描的顺序收集，尚未 Reverse</div></div>
+</div>
+<div id="explain" class="explain" aria-live="polite" aria-atomic="true"><div id="explainHead" class="explain-head"></div><div id="explainBody" class="explain-body"></div></div>
+<div id="resultBanner" class="result-banner" hidden><h3>最终返回的 String</h3><div id="resultText" class="result-string"></div><div id="resultMeta" class="result-meta"></div></div>
+<div class="controls"><button id="reset" type="button" title="回到开头">重置</button><span class="spacer"></span><select id="speed" aria-label="自动播放速度"><option value="1400">慢速</option><option value="850" selected>常速</option><option value="400">快速</option></select><button id="play" type="button">自动播放</button><button id="prev" type="button" aria-label="上一步">← 上一步</button><button id="next" type="button" class="primary" aria-label="下一步">下一步 →</button></div>
+<label for="timeline" class="form-note">进度</label><input id="timeline" class="timeline" type="range" min="0" max="1" value="0" aria-label="拖动查看任意一步"><div class="timeline-caption"><span id="totalStep"></span><span>← / → 切换步骤 · Space 播放 / 暂停</span></div>
+</section>
+<details class="detail" id="codeDetails"><summary>Python 代码 · 当前步骤高亮</summary><div id="code" class="content code-content"></div></details>
+<details class="detail"><summary>读懂 cnt：两遍遍历中，它分别代表什么？</summary><div class="content">
+<p><strong>Pass 1：</strong><code>cnt</code> 是扫描到目前为止，尚未匹配的 <code>(</code> 数量；遇到 <code>(</code> 加 1，保留一个 <code>)</code> 时减 1。</p>
+<p><strong>Pass 2：</strong><code>cnt</code> 是还需要删除的 <code>(</code> 数量。条件 <code>ch == '(' and cnt &gt; 0</code> 成立，就跳过这个字符并减 1。<strong>不 append 才是删除，减 1 只是更新数量。</strong></p>
+<p><strong>为什么从右侧删？</strong>先删更靠后的 <code>(</code>，可以为前面的 <code>)</code> 保留它需要的左括号。例如 <code>()(</code> 若删第一个 <code>(</code>，会变成不合法的 <code>)(</code>。</p>
+<p><strong>不追踪具体配对：</strong>第二遍删除的是最右侧的若干个 <code>(</code>，不一定是第一遍匹配方式下剩余的那些位置。例如 <code>(()</code> 会删除中间的 <code>(</code>，保留的括号重新配对，得到 <code>()</code>。题目允许任意最少删除后的合法答案。</p>
+<p><strong>Time：</strong>O(n)　<strong>Space：</strong>O(n)。这是被演示的 Python 算法的 Complexity；逐步快照演示会额外保存中间状态。</p>
+</div></details>
+<footer class="footer"><span>仅在浏览器本地计算 · 无登录 · 无外部脚本 · 不上传输入</span><span><button id="copyLink" type="button" class="mode-button">复制当前步骤链接</button><button id="theme" type="button" class="mode-button">切换主题</button></span><span id="copyStatus" role="status"></span></footer>
+<noscript>这个交互演示需要启用 JavaScript；它不发送输入或进行网络请求。</noscript>
+</main>
+<script id="trace-engine">
+'use strict';
+/** Pure trace engine: kept separate from the UI so its states can be tested in Node. */
+function buildTrace1249(input) {
+  if (typeof input !== 'string' || !/^[a-z()]*$/.test(input)) throw new Error('请输入小写字母和括号，不要输入引号或空格。');
+  if (input.length > 120) throw new Error('为保持逐步演示流畅，请输入不超过 120 个字符。');
+  const source = Array.from(input, (ch, original) => ({ch, original}));
+  const frames = [], res = [], filtered = [], removed = [];
+  let cnt = 0;
+  function save(phase, step, active, action, head, body, lines, before = cnt) {
+    frames.push({phase, step, active, action, head, body, lines, before, cnt,
+      res:res.map(x=>({...x})), filtered:filtered.map(x=>({...x})), removed:[...removed]});
+  }
+  save(1,0,null,'start','先准备空的 res 和 cnt = 0。','从左往右扫描。先过滤无法匹配的右括号；左括号暂时保留，等待后面的字符。',[2,3]);
+  source.forEach((item, i) => {
+    const before = cnt;
+    if(item.ch === '(') {
+      res.push(item); cnt++;
+      save(1,i+1,i,'keep','遇到 (：先保留，等待匹配。',`res.append(ch)；cnt 从 ${before} 变成 ${cnt}。此时还不能判断这个左括号最终是否多余。`,[5,6,7],before);
+    } else if(item.ch === ')' && cnt > 0) {
+      res.push(item); cnt--;
+      save(1,i+1,i,'keep','遇到 )，而且 cnt > 0：可以匹配，保留。',`前面有尚未匹配的 (。保留这个 )，cnt 从 ${before} 变成 ${cnt}；已匹配的左右括号都留在 res 中。`,[8,9,10],before);
+    } else if(item.ch !== ')') {
+      res.push(item);
+      save(1,i+1,i,'keep',`字母 ${item.ch}：直接保留。`,'字符不是括号，不影响匹配数量。res.append(ch)，cnt 不变。',[11,12],before);
+    } else {
+      removed.push(item.original);
+      save(1,i+1,i,'drop','遇到 )，但 cnt == 0：跳过。','前面没有 ( 可以匹配，后面的 ( 也不能匹配前面的 )。三个分支都不执行，不 append 就等于删除。',[5,8,11],before);
+    }
+  });
+  const pass1Count = cnt;
+  const pass1 = res.map(x=>({...x}));
+  const pass2Start = frames.length;
+  save(2,0,null,'start',`Pass 1 结束：还需要删除 ${cnt} 个 (。`,'从 res 的右侧开始扫描。cnt 现在作为待删除数量使用；跳过足够数量的 (，其余字符都放入 filtered。',[13,14]);
+  for(let i = res.length-1, step=1; i>=0; i--,step++) {
+    const item = res[i], before = cnt;
+    if(item.ch === '(' && cnt > 0) {
+      cnt--; removed.push(item.original);
+      save(2,step,i,'drop','遇到 (，而且还有删除名额：跳过。',`没有执行 filtered.append(ch)，所以这个 ( 不会进入结果。cnt 从 ${before} 变成 ${cnt}，还需删除 ${cnt} 个 (。`,[15,16],before);
+    } else {
+      filtered.push(item);
+      const body = item.ch === '(' ? '虽然当前是 (，但 cnt 已经为 0，说明已经删够。条件不成立，进入 else，必须保留它。' : '不满足「当前是 ( 且还需要删除」这个条件，进入 else。filtered 按扫描顺序收集，因此目前是倒序的。';
+      save(2,step,i,'keep',item.ch === '(' ? '遇到 (，但 cnt == 0：保留。' : `遇到 ${item.ch}：保留。`,body,[15,17,18],before);
+    }
+  }
+  const result = [...filtered].reverse().map(x=>x.ch).join('');
+  save(3,1,null,'finish','Reverse + Join：恢复原顺序，得到答案。','filtered 是从右往左收集的；filtered[::-1] 恢复顺序，再用 "".join(...) 拼成 String。',[19]);
+  return {input, source, frames, pass1, pass1Count, pass2Start, result, removedCount:removed.length};
+}
+if (typeof module !== 'undefined' && module.exports) module.exports = {buildTrace1249};
+</script>
+<script>
+'use strict';
+(() => {
+const $ = id => document.getElementById(id);
+const initialParams = new URLSearchParams(location.search);
+const hashParams = new URLSearchParams(location.hash.slice(1));
+const initialInput = hashParams.get('s') ?? initialParams.get('s') ?? 'a)b(c)d(('; // Fragment keeps shared examples out of server requests.
+let trace, cursor = 0, timer = null;
+if (initialParams.get('embed') === '1') document.body.classList.add('embed');
+const pythonLines = [
+'def minRemoveToMakeValid(self, s: str) -> str:',
+'    res = []',
+'    cnt = 0',
+'    for ch in s:',
+"        if ch == '(':",
+'            res.append(ch)',
+'            cnt += 1',
+"        elif ch == ')' and cnt > 0:",
+'            res.append(ch)',
+'            cnt -= 1',
+"        elif ch != ')':",
+'            res.append(ch)',
+'    filtered = []',
+'    for ch in res[::-1]:',
+"        if ch == '(' and cnt > 0:",
+'            cnt -= 1',
+'        else:',
+'            filtered.append(ch)',
+'    return "".join(filtered[::-1])'
+];
+pythonLines.forEach((line,i) => {
+  const row = document.createElement('div');row.className='code-line';row.dataset.line=String(i+1);
+  const no = document.createElement('span');no.className='line-no';no.textContent=String(i+1);
+  const code = document.createElement('span');code.textContent=line;
+  row.append(no,code);$('code').append(row);
+});
+function textList(items){return '['+items.map(x=>`'${x.ch}'`).join(', ')+']';}
+function setVariable(name,items){$(name+'Text').textContent=items.length?items.map(x=>x.ch).join(''):'""';$(name+'List').textContent=textList(items);}
+function halt(){if(timer!==null){clearInterval(timer);timer=null;}$('play').textContent='自动播放';}
+function render(){
+  const f=trace.frames[cursor];
+  $('tab1').setAttribute('aria-selected',String(f.phase===1));$('tab2').setAttribute('aria-selected',String(f.phase===2));$('tab3').setAttribute('aria-selected',String(f.phase===3));
+  const titles=['','Pass 1 — 从左往右','Pass 2 — 从右往左','完成 — Reverse + Join'];
+  $('phaseTitle').textContent=titles[f.phase];
+  $('stageSub').textContent=f.phase===1?'过滤无法匹配的 )；记录未匹配的 ( 数量。':f.phase===2?'跳过 cnt 个 (；按反向顺序收集剩余字符。':'仅恢复字符顺序，不再改变括号数量。';
+  const length=f.phase===1?trace.source.length:trace.pass1.length;
+  $('stepLabel').textContent=f.phase===3?'完成':`Step ${f.step} / ${length}`;
+  $('railName').textContent=f.phase===1?'s · 原字符串（上方为原始 index）':f.phase===2?'res · Pass 1 的结果（上方为 res 的 index）':'最终结果';
+  $('direction').textContent=f.phase===1?'扫描方向 →':f.phase===2?'← 扫描方向':'已恢复原顺序';
+  const items=f.phase===1?trace.source:f.phase===2?trace.pass1:[...f.filtered].reverse();
+  const rail=$('rail');rail.replaceChildren();
+  if(items.length===0){const empty=document.createElement('div');empty.className='rail-empty';empty.textContent='"" · 空字符串';rail.append(empty);}
+  items.forEach((item,i)=>{
+    const cell=document.createElement('div');cell.className='cell';
+    const active=f.active===i && f.phase!==3;
+    const processed=f.phase===1?i<f.step:f.phase===2?i>=items.length-f.step:true;
+    const removed=processed && f.removed.includes(item.original);
+    if(processed)cell.classList.add('done');if(removed)cell.classList.add('removed');if(active)cell.classList.add('active');
+    const idx=document.createElement('div');idx.className='idx';idx.textContent=String(i);
+    const tile=document.createElement('div');tile.className='tile';tile.textContent=item.ch;
+    const mark=document.createElement('div');mark.className='mark';mark.textContent=removed?'跳过':active?'当前':processed?'保留':'';
+    cell.setAttribute('aria-label',`index ${i}, ${item.ch}, ${mark.textContent||'未处理'}`);cell.append(idx,tile,mark);rail.append(cell);
+  });
+  const active=rail.querySelector('.active');
+  if(active){const x=active.offsetLeft-rail.offsetLeft;if(x<rail.scrollLeft||x+active.offsetWidth>rail.scrollLeft+rail.clientWidth)rail.scrollLeft=Math.max(0,x-rail.clientWidth/2+active.offsetWidth/2);}
+  setVariable('res',f.res);setVariable('filtered',f.filtered);
+  $('cntText').replaceChildren();
+  if(f.before!==f.cnt){const before=document.createElement('span');before.className='before';before.textContent=`${f.before} → `;$('cntText').append(before);}
+  $('cntText').append(document.createTextNode(String(f.cnt)));
+  $('cntHelp').textContent=f.phase===1?'尚未匹配的 ( 数量':f.phase===2?'还需要删除的 ( 数量':'删除名额已用完';
+  $('varFiltered').hidden=f.phase===1;$('variables').classList.toggle('three',f.phase!==1);
+  $('explain').className='explain'+(f.action==='drop'?' drop':f.action==='finish'?' finish':'');
+  $('explainHead').textContent=f.head;$('explainBody').textContent=f.body;
+  $('resultBanner').hidden=f.phase!==3;
+  $('resultText').textContent=JSON.stringify(trace.result);
+  $('resultMeta').textContent=`共删除 ${trace.removedCount} 个括号：Pass 1 删除 ${trace.source.length-trace.pass1.length} 个 )；Pass 2 删除 ${trace.pass1Count} 个 (。所有字母和剩余字符的相对顺序不变。`;
+  $('prev').disabled=cursor===0;$('next').disabled=cursor===trace.frames.length-1;
+  $('timeline').max=String(trace.frames.length-1);$('timeline').value=String(cursor);
+  $('timeline').setAttribute('aria-valuetext',`${titles[f.phase]}，总进度 ${cursor} / ${trace.frames.length-1}`);
+  $('totalStep').textContent=`总进度 ${cursor} / ${trace.frames.length-1}`;
+  document.querySelectorAll('.code-line').forEach(row=>row.classList.toggle('active',f.lines.includes(Number(row.dataset.line))));
+}
+function go(index){cursor=Math.max(0,Math.min(index,trace.frames.length-1));render();if(cursor===trace.frames.length-1)halt();}
+function run(value,index=0){
+  try {const nextTrace=buildTrace1249(value);halt();trace=nextTrace;cursor=Math.min(Math.max(0,Math.floor(Number(index)||0)),trace.frames.length-1);$('source').value=value;$('error').textContent='';$('copyStatus').textContent='';render();return true;}
+  catch(e){$('error').textContent=e.message;return false;}
+}
+function togglePlay(){
+  if(timer!==null){halt();return;}
+  if(cursor===trace.frames.length-1)go(0);
+  $('play').textContent='暂停';timer=setInterval(()=>go(cursor+1),Number($('speed').value));
+}
+$('inputForm').addEventListener('submit',e=>{e.preventDefault();run($('source').value);});
+$('examples').addEventListener('change',e=>{if(e.target.value){run(e.target.value==='__empty__'?'':e.target.value);e.target.value='';}});
+$('next').addEventListener('click',()=>{halt();go(cursor+1);});$('prev').addEventListener('click',()=>{halt();go(cursor-1);});$('reset').addEventListener('click',()=>{halt();go(0);});
+$('tab1').addEventListener('click',()=>{halt();go(0);});$('tab2').addEventListener('click',()=>{halt();go(trace.pass2Start);});$('tab3').addEventListener('click',()=>{halt();go(trace.frames.length-1);});
+$('timeline').addEventListener('input',e=>{halt();go(Number(e.target.value));});$('play').addEventListener('click',togglePlay);
+$('speed').addEventListener('change',()=>{if(timer!==null){halt();togglePlay();}});
+$('theme').addEventListener('click',()=>{const current=document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=current==='dark'?'light':'dark';});
+$('copyLink').addEventListener('click',async()=>{
+  if(location.protocol==='file:'){$('copyStatus').textContent='本地文件没有公开链接。发布到 GitHub Pages 后可复制步骤链接。';return;}
+  const url=new URL(location.href);url.searchParams.delete('s');url.searchParams.delete('step');url.hash=new URLSearchParams({s:trace.input,step:String(cursor)}).toString();
+  try{await navigator.clipboard.writeText(url.href);$('copyStatus').textContent='已复制当前示例与步骤的链接。';}catch{$('copyStatus').textContent='浏览器未允许复制。可从下方选择并复制：';let field=$('shareFallback');if(!field){field=document.createElement('input');field.id='shareFallback';field.readOnly=true;field.style.width='100%';field.setAttribute('aria-label','可复制的步骤链接');$('copyStatus').after(field);}field.value=url.href;field.focus();field.select();}
+});
+document.addEventListener('keydown',e=>{if(e.target.closest('input,select,textarea,button,summary'))return;if(e.key==='ArrowRight'){e.preventDefault();halt();go(cursor+1);}else if(e.key==='ArrowLeft'){e.preventDefault();halt();go(cursor-1);}else if(e.code==='Space'){e.preventDefault();togglePlay();}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)halt();});
+if(!run(initialInput,hashParams.get('step') ?? initialParams.get('step') ?? 0)){const message=$('error').textContent;run('a)b(c)d((');$('error').textContent='链接中的输入无效，已恢复默认示例。'+message;}
+})();
+</script>
+</body>
+</html>
