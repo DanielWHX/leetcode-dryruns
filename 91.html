@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="description" content="LeetCode 91 Decode Ways — interactive bottom-up dynamic programming dry run">
+<title>LC 91 — Decode Ways · Interactive Dry Run</title>
+<style>
+:root{color-scheme:light;--text:#202124;--gray:#737373;--border:#e5e5e8;--panel:#fff;--muted:#f8f8f9;--blue-bg:#e1eafd;--blue-line:#bfd3ff;--orange-bg:#ffecdf;--orange-line:#fa951f;--valid:#079434;--invalid:#c24141;--mono:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;background:#fff;color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+body{padding:16px 20px;font-size:17px;line-height:1.5}
+body.embed{padding:0}
+button{font:inherit;cursor:pointer;color:inherit}
+.wrap{max-width:1320px;margin:0 auto;border:1.5px solid var(--border);border-radius:23px;padding:26px 22px 20px;min-height:640px;background:var(--panel)}
+.topline{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.heading{font-weight:650;font-size:24px;letter-spacing:-.5px}
+.heading code{font-family:var(--mono);font-size:.96em;font-weight:500;padding:4px 8px;background:#f5f5f6;border-radius:8px;letter-spacing:0}
+.subtitle{font-size:18px;color:#666;margin-top:8px}
+.stepmark{color:#777;font-size:19px;padding-top:18px;white-space:nowrap}
+.section{margin-top:26px}
+.section.take2{margin-top:24px}
+.section-title{display:flex;justify-content:space-between;align-items:center;font-size:22px;font-weight:600;margin-bottom:16px}
+.flag{font-size:18px;font-weight:500}
+.flag.ok{color:var(--valid)}.flag.no{color:var(--invalid)}
+.char-row{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:7px}
+.cellgroup{min-width:0}
+.cell{height:79px;border:1.5px solid #e9e9ed;border-radius:13px;background:#fbfbfc;display:flex;align-items:center;justify-content:center;font-size:31px;font-weight:600;transition:background .15s,border .15s}
+.cell.one{background:var(--blue-bg);border-color:var(--blue-line)}
+.cell.two{background:var(--orange-bg);border:1.5px solid var(--orange-line)}
+.cell.dim{color:#a7a7a7;background:#fbfbfc}
+.index{font-size:16px;color:#696969;text-align:center;margin-top:6px;line-height:1.2}
+.statement{margin-top:16px;font-size:18px;min-height:32px;letter-spacing:.05px}
+.statement code{background:#f4f4f5;border-radius:5px;padding:1px 5px;font-family:var(--mono);font-size:.94em}
+hr{height:1px;border:none;background:#e9e9ed;margin:28px 0 0}
+.outcome{margin:24px 0 0;padding:10px 18px 0}
+.muted-label{font-size:18px;color:#737373}
+.result-row{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-top:10px}
+.result{font-size:27px;font-weight:660;letter-spacing:-.35px}
+.summary{font-size:16px;color:#666;white-space:nowrap}
+.dp-row{display:flex;align-items:flex-start;gap:6px;margin-top:16px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:5px}
+.dp-group{min-width:43px;display:flex;flex-direction:column;align-items:center;gap:5px}
+.dp-cell{width:43px;height:57px;border:1px solid #e1e2e5;border-radius:9px;background:#f7f7f8;font-size:22px;display:flex;align-items:center;justify-content:center;font-weight:450}
+.dp-cell.active{background:#e5edff;border-color:#d7e2ff;font-weight:700}
+.dp-cell.pending{color:#aaa}
+.dp-index{font-size:14px;color:#777;line-height:1.3}
+.hint{font-size:17px;color:#777;margin-top:8px}
+.controls{margin-top:45px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.right-controls{display:flex;gap:12px;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:43px;padding:7px 17px;border:1.5px solid #dcdcdf;border-radius:25px;background:#fff;color:#444;font-size:18px;font-weight:520;white-space:nowrap;transition:background .12s}
+.btn:hover:not(:disabled){background:#f6f6f7}
+.btn:focus-visible{outline:3px solid #94b9ff;outline-offset:2px}
+.btn:disabled{cursor:default;color:#909090;background:#f4f4f5;border-color:#f4f4f5}
+.btn svg{width:22px;height:22px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:700px){body{padding:8px}.wrap{padding:17px 12px 13px;border-radius:16px;min-height:0}.heading{font-size:17px}.heading code{font-size:17px}.subtitle{font-size:13px}.stepmark{font-size:13px;padding-top:10px}.section{margin-top:20px}.section-title{font-size:15px;margin-bottom:9px}.flag{font-size:14px}.char-row{gap:4px}.cell{height:50px;border-radius:8px;font-size:21px}.index{font-size:11px}.statement{font-size:13px;min-height:26px}.outcome{padding:5px 5px 0}.muted-label{font-size:13px}.result{font-size:18px}.summary{font-size:11px}.dp-row{margin-top:12px;gap:4px}.dp-cell{width:35px;height:42px;font-size:16px}.dp-group{min-width:35px}.dp-index{font-size:10px}.hint{font-size:12px}.controls{margin-top:23px}.btn{font-size:13px;padding:6px 10px;min-height:34px;gap:4px}.btn svg{width:16px;height:16px}.right-controls{gap:6px}hr{margin-top:14px}.section.take2{margin-top:15px}}
+@media(max-width:385px){.cell{height:42px;font-size:18px}.char-row{gap:2px}.topline{gap:6px}.heading{font-size:15px}.heading code{font-size:15px}.stepmark{font-size:12px}.result-row{display:block}.summary{margin-top:6px}.btn{font-size:12px;padding:5px 8px}.dp-row{overflow-x:auto}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap" aria-label="LC 91 交互式 DP Dry Run">
+  <div class="topline">
+    <div>
+      <div class="heading">当前计算： <code id="currentState">dp[8]</code></div>
+      <div class="subtitle" id="prefix">s[:8] = "12121026"</div>
+    </div>
+    <div class="stepmark" id="stepmark">Step 8 / 8</div>
+  </div>
+  <section class="section" aria-label="Take 1 Digit">
+    <div class="section-title"><span>Take 1 Digit</span><span class="flag ok" id="flag1">Valid</span></div>
+    <div class="char-row" id="chars1"></div>
+    <div class="statement" id="line1"></div>
+  </section>
+  <hr>
+  <section class="section take2" aria-label="Take 2 Digits">
+    <div class="section-title"><span>Take 2 Digits</span><span class="flag ok" id="flag2">Valid</span></div>
+    <div class="char-row" id="chars2"></div>
+    <div class="statement" id="line2"></div>
+  </section>
+  <section class="outcome" aria-live="polite" aria-atomic="true">
+    <div class="muted-label">本轮计算结果</div>
+    <div class="result-row">
+      <div class="result" id="equation">dp[8] = 5 + 5 = 10</div>
+      <div class="summary" id="summary">1-digit ✓ / 2-digit ✓</div>
+    </div>
+    <div class="dp-row" id="dpTable" aria-label="DP Array"></div>
+    <div class="hint">下方数字是 dp Array 的 Index。</div>
+  </section>
+  <div class="controls">
+    <button type="button" class="btn" id="reset" aria-label="重置到第一步">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4v6h6"/><path d="M3.5 10A8 8 0 1 1 4.5 17"/></svg>重置
+    </button>
+    <div class="right-controls">
+      <button type="button" class="btn" id="prev" aria-label="上一步"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 4-8 8 8 8"/></svg>上一步</button>
+      <button type="button" class="btn" id="next" aria-label="下一步">下一步<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 4 8 8-8 8"/></svg></button>
+    </div>
+  </div>
+</main>
+<script>
+(function(){
+  "use strict";
+  const s="12121026", n=s.length, dp=new Array(n+1).fill(0);
+  dp[0]=1;
+  const steps=[];
+  for(let i=1;i<=n;i++){
+    const one=s[i-1], two=i>=2?s.slice(i-2,i):null;
+    const validOne=one!=="0", validTwo=two!==null&&Number(two)>=10&&Number(two)<=26;
+    const addOne=validOne?dp[i-1]:0, addTwo=validTwo?dp[i-2]:0;
+    dp[i]=addOne+addTwo;
+    steps.push({i,one,two,validOne,validTwo,addOne,addTwo,value:dp[i],snap:dp.slice()});
+  }
+  let cursor=n-1;
+  const el=id=>document.getElementById(id);
+  const escapeHTML=txt=>String(txt).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+  function renderRow(container,i,take){
+    let content="";
+    for(let j=0;j<n;j++){
+      const chosen=take===1?j===i-1:j>=i-2&&j<i;
+      const style=chosen?(take===1?" one":" two"):"";
+      const dim=j>=i?" dim":"";
+      content+='<div class="cellgroup"><div class="cell'+style+dim+'">'+escapeHTML(s[j])+'</div><div class="index">'+j+'</div></div>';
+    }
+    el(container).innerHTML=content;
+  }
+  function render(){
+    const t=steps[cursor],i=t.i;
+    el("currentState").textContent="dp["+i+"]";
+    el("prefix").textContent='s[:'+i+'] = "'+s.slice(0,i)+'"';
+    el("stepmark").textContent="Step "+i+" / "+n;
+    for(const type of [1,2]){
+      const yes=type===1?t.validOne:t.validTwo;
+      el("flag"+type).textContent=yes?"Valid":"Invalid";
+      el("flag"+type).className="flag "+(yes?"ok":"no");
+      renderRow("chars"+type,i,type);
+    }
+    el("line1").innerHTML=t.validOne
+      ?'<code>s['+(i-1)+'] = "'+escapeHTML(t.one)+'"</code> → +dp['+(i-1)+'] = +'+t.addOne
+      :'<code>s['+(i-1)+'] = "0"</code> → 0 不能单独解码，+0';
+    el("line2").innerHTML=i<2
+      ?'当前不足 2 位，无法 Take 2 Digits → +0'
+      :t.validTwo
+        ?'<code>s['+(i-2)+':'+i+'] = "'+escapeHTML(t.two)+'"</code> → +dp['+(i-2)+'] = +'+t.addTwo
+        :'<code>s['+(i-2)+':'+i+'] = "'+escapeHTML(t.two)+'"</code> 不在 [10, 26]，+0';
+    el("equation").textContent='dp['+i+'] = '+t.addOne+' + '+t.addTwo+' = '+t.value;
+    el("summary").textContent='1-digit '+(t.validOne?"✓":"×")+' / 2-digit '+(t.validTwo?"✓":"×");
+    let arr="";
+    for(let j=0;j<=n;j++){
+      const available=j<=i;
+      const value=available?t.snap[j]:"–";
+      arr+='<div class="dp-group"><div class="dp-cell'+(j===i?" active":"")+(available?"":" pending")+'">'+value+'</div><div class="dp-index">'+j+'</div></div>';
+    }
+    el("dpTable").innerHTML=arr;
+    el("prev").disabled=cursor===0;
+    el("next").disabled=cursor===steps.length-1;
+  }
+  el("prev").addEventListener("click",()=>{if(cursor>0){cursor--;render()}});
+  el("next").addEventListener("click",()=>{if(cursor<steps.length-1){cursor++;render()}});
+  el("reset").addEventListener("click",()=>{cursor=0;render()});
+  document.addEventListener("keydown",event=>{
+    if(event.altKey||event.ctrlKey||event.metaKey||["INPUT","TEXTAREA"].includes(document.activeElement.tagName))return;
+    if(event.key==="ArrowLeft"&&cursor>0){event.preventDefault();cursor--;render()}
+    if(event.key==="ArrowRight"&&cursor<n-1){event.preventDefault();cursor++;render()}
+  });
+  if(new URLSearchParams(location.search).has("embed"))document.body.classList.add("embed");
+  render();
+})();
+</script>
+</body>
+</html>
