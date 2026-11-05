@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LC 809 — Two Pointers Dry Run</title><style>*{box-sizing:border-box}body{margin:0;background:#fafafa;color:#111;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.panel{max-width:1150px;margin:28px auto;background:#fff;border:1px solid #e8e8e8;border-radius:22px;padding:22px 26px}header,.linehead,.controls{display:flex;align-items:center;justify-content:space-between}h1{font-size:25px;margin:0 0 32px}.muted{color:#666}.linehead{font-size:22px;font-weight:650;margin:18px 0 12px}.linehead small{font-size:16px;font-weight:400;color:#666}.chars{display:grid;gap:5px}.char{text-align:center;min-width:0}.tile{height:62px;display:flex;align-items:center;justify-content:center;border-radius:10px;font-size:24px;font-weight:600}.tile.active{background:#dceee1}.idx{font-size:14px;color:#999;margin-top:7px}.counts{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:35px 10px}.counts .name{font-size:20px;color:#666}.counts .value{font-size:29px;font-weight:650;margin-top:8px}.status{display:flex;gap:14px;margin:12px 0 8px}.check{color:#0a9e48;font-size:23px}.status strong{font-size:23px}.reason{margin:12px 0 8px;font-size:19px}.next{color:#666;font-size:17px}.controls{margin-top:36px;gap:10px}button{border:1px solid #dedede;background:white;border-radius:28px;padding:13px 22px;font-size:17px;cursor:pointer}button.primary{background:#080808;color:white;border-color:#080808}button:disabled{opacity:.35;cursor:default}@media(max-width:600px){.panel{margin:8px;padding:15px}.tile{height:43px;font-size:18px}.linehead{font-size:17px}.linehead small{font-size:13px}h1{font-size:21px}.counts{margin:25px 0}.reason{font-size:15px}.status strong{font-size:18px}button{padding:10px 13px;font-size:14px}}</style></head><body><main class="panel"><header><h1>Two Pointers Dry Run</h1><span class="muted" id="stepLabel">Step 1 / 4</span></header><section><div class="linehead"><span>s = "heeellooo"</span><small id="ipos">i = 0</small></div><div class="chars" id="srow"></div></section><section><div class="linehead"><span>word = "hello"</span><small id="jpos">j = 0</small></div><div class="chars" id="wrow"></div></section><section class="counts"><div><div class="name">countS</div><div class="value" id="cs">1</div></div><div><div class="name">countW</div><div class="value" id="cw">1</div></div></section><div class="status"><span class="check">✓</span><div><strong>当前 Group 合法</strong><p class="reason" id="reason"></p><div class="next" id="next"></div></div></div><nav class="controls"><button id="prev">❮ &nbsp; Previous</button><button id="reset">↺ &nbsp; Reset</button><button class="primary" id="nextBtn">Next &nbsp; ❯</button></nav></main><script>
+const s='heeellooo',w='hello';
+const steps=[
+{i:0,j:0,ni:1,nj:1,cs:1,cw:1,reason:'h 和 h 匹配，两个 Group 都只有 1 个字符，不需要扩展。'},
+{i:1,j:1,ni:4,nj:2,cs:3,cw:1,reason:'s 有 3 个 e，word 有 1 个 e。可以从 1 扩展到 3。'},
+{i:4,j:2,ni:6,nj:4,cs:2,cw:2,reason:'两个 Group 都有 2 个 l，直接匹配，不需要扩展。'},
+{i:6,j:4,ni:9,nj:5,cs:3,cw:1,reason:'s 有 3 个 o，word 有 1 个 o，可以扩展。'}];
+let step=0;
+function drawRow(el,str,start,end,ptr){
+el.style.gridTemplateColumns='repeat('+str.length+',minmax(0,1fr))';
+el.innerHTML=[...str].map((c,k)=>'<div class="char"><div class="tile '+(k>=start&&k<end?'active':'')+'">'+c+'</div><div class="idx">'+(k===ptr?(el.id==='srow'?'i':'j'):k)+'</div></div>').join('');
+}
+function render(){
+const x=steps[step];
+document.getElementById('stepLabel').textContent='Step '+(step+1)+' / 4';
+document.getElementById('ipos').textContent='i = '+x.i;
+document.getElementById('jpos').textContent='j = '+x.j;
+drawRow(document.getElementById('srow'),s,x.i,x.ni,x.i);
+drawRow(document.getElementById('wrow'),w,x.j,x.nj,x.j);
+document.getElementById('cs').textContent=x.cs;
+document.getElementById('cw').textContent=x.cw;
+document.getElementById('reason').textContent=x.reason;
+document.getElementById('next').textContent='处理完后：i → '+x.ni+'，j → '+x.nj+(step===3?'。两个 Pointer 都到达末尾，返回 True。':'');
+document.getElementById('prev').disabled=step===0;
+document.getElementById('nextBtn').disabled=step===3;
+}
+document.getElementById('prev').onclick=()=>{step--;render()};
+document.getElementById('nextBtn').onclick=()=>{step++;render()};
+document.getElementById('reset').onclick=()=>{step=0;render()};
+render();
+</script></body></html>
